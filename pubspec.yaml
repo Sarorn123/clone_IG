@@ -1,0 +1,41 @@
+name: clone_instagram
+description: A new Flutter project.
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^1.16.0
+  firebase_auth: ^3.3.17
+  cloud_firestore: ^3.1.14
+  image_picker: ^0.8.5+3
+  firebase_storage: ^10.2.15
+  uuid: ^3.0.6
+  firebase_messaging: ^11.4.0
+  flutter_local_notifications: ^9.5.3+1
+  http: ^0.13.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - "assets/logo_text.png"
+    - "assets/camera.png"
+    - "assets/messenger.jpg"
+    - "assets/share.png"
+    - "assets/add_more.png"
+    - "assets/home.png"
+    - "assets/search.png"
+    - "assets/person.png"
+    - "assets/heart.png"
+    - "profile_no_img.png"
