@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unnecessary_new
 
 import 'package:clone_instagram/views/auth/signup.dart';
 import 'package:flutter/material.dart';
@@ -15,21 +15,39 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _isFieldEmpty = false;
+  String msg = "";
 
   Future _singIn() async {
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        )
-        .then(
-          (result) => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => MyApp()),
-          ),
-        )
-        .catchError((error) {
-      print(error.message.toString());
-    });
+    if (_emailController.text != "" && _passwordController.text != "") {
+      setState(() {
+        _isLoading = true;
+      });
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          )
+          .then(
+            (result) => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => MyApp()),
+            ),
+          )
+          .catchError((error) {
+        setState(() {
+          msg = error.message.toString();
+          _isFieldEmpty = true;
+          _isLoading = false;
+        });
+        print(error.message.toString());
+      });
+    } else {
+      setState(() {
+        msg = "Both field can not empty !";
+        _isFieldEmpty = true;
+      });
+    }
   }
 
   @override
@@ -42,64 +60,163 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 50, child: Image.asset("assets/logo_text.png")),
-            SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email...',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(width: 3, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(15),
+      body: Stack(children: [
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 50, child: Image.asset("assets/logo_text.png")),
+              SizedBox(
+                height: 20,
+              ),
+              _isFieldEmpty
+                  ? Text(
+                      msg,
+                      style: TextStyle(color: Colors.red),
+                    )
+                  : Text(""),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(width: 3, color: Colors.red),
-                  borderRadius: BorderRadius.circular(15),
+                child: TextField(
+                  style: TextStyle(color: Colors.white),
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 15, color: Colors.white70),
+                    hintText: 'Phone number, Email or username',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(15),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(width: 3, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(15),
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(width: 3, color: Colors.red),
-                  borderRadius: BorderRadius.circular(15),
+                child: TextField(
+                  style: TextStyle(color: Colors.white),
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 15, color: Colors.white70),
+                    hintText: 'password',
+                    border: InputBorder.none,
+                    suffixIcon: Icon(Icons.remove_red_eye),
+                    contentPadding: EdgeInsets.all(15),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            OutlinedButton(
-              onPressed: _singIn,
-              child: Text("Login"),
-            ),
-            OutlinedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SignUp()),
-                );
-              },
-              child: Text("Sing Up"),
-            ),
-          ],
+              SizedBox(
+                height: 15,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  textColor: Colors.white,
+                  color: Colors.blue,
+                  onPressed: _singIn,
+                  child: _isLoading
+                      ? Container(
+                          height: 15,
+                          width: 15,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          "Log in",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Forgot Your Login Detail ? "),
+                  TextButton(
+                      onPressed: () {}, child: Text("Get Help Logging In."))
+                ],
+              ),
+              Container(
+                child: Row(children: [
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      height: 2,
+                      width: 50,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  Text(
+                    " Or ",
+                    style: TextStyle(),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      height: 2,
+                      width: 50,
+                      color: Colors.black38,
+                    ),
+                  ),
+                ]),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(10),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.facebook,
+                    size: 30.0,
+                  ),
+                  label: Text('Continue as Facebook'),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+        Positioned(
+          left: 0,
+          bottom: 0,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 60.0,
+            decoration: new BoxDecoration(color: Colors.blueGrey),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't Have An Account ? ",
+                  style: TextStyle(color: Colors.white),
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SignUp()));
+                    },
+                    child: Text("Sing Up"))
+              ],
+            ),
+          ),
+        ),
+      ]),
     );
   }
 }

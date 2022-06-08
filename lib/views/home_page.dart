@@ -74,7 +74,9 @@ class _HomePageState extends State<HomePage> {
       Home(
         currentUserInfo: currentUserInfo,
       ),
-      Search(),
+      Search(
+        currentUserInfo: currentUserInfo,
+      ),
       AddNewPost(
         currentUserInfo: currentUserInfo,
         setIndex: setIndex,

@@ -52,7 +52,7 @@ class _NotificationCardState extends State<NotificationCard> {
                     ),
                     Row(
                       children: [
-                        Text(widget.body + "2d"),
+                        Flexible(child: Text(widget.body + "2d")),
                       ],
                     ),
                     SizedBox(),

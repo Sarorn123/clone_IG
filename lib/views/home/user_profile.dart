@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, deprecated_member_use, use_key_in_widget_constructors
 
 import 'package:clone_instagram/services/local_noticfication_service.dart';
-import 'package:clone_instagram/views/auth/login.dart';
 import 'package:clone_instagram/views/home/follower_following.dart';
 import 'package:clone_instagram/views/home/list_own_photo.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './recommentd_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +18,6 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   dynamic userInfo = [];
-  // dynamic currentUser = [];
   bool followed = false;
   List userPosts = [];
   bool _isLoading = false;
