@@ -56,9 +56,6 @@ class _SearchState extends State<Search> {
       allUsers.add(userInfo);
     });
 
-    print("->");
-    print(userInfo);
-
     /////////////
 
     FirebaseFirestore.instance
